@@ -29,7 +29,6 @@ if (config.featureRemoveGithubUserFromOrganization) {
   );
 }
 
-
 if (config.featureCreateUserOnMattermost) {
   console.log('Cron job to create user on mattermost by email on');
   const { createUsersByEmail } = require('./mattermostScheduler');
@@ -43,3 +42,21 @@ if (config.featureCreateUserOnMattermost) {
 } else {
   console.log('Cron job to create user on mattermost by email off');
 }
+
+const { onUserContractEnding } = require('./userContractEndingScheduler');
+
+const onUserContractEndIn15days = new CronJob(
+  '0 */8 * * * *',
+  () => onUserContractEnding('mail15days'),
+  null,
+  true,
+  'Europe/Paris',
+);
+
+const onUserContractEndIn2days = new CronJob(
+  '0 */8 * * * *',
+  () => onUserContractEnding('mail2days'),
+  null,
+  true,
+  'Europe/Paris',
+);
