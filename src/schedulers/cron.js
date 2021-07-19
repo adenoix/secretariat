@@ -1,9 +1,9 @@
+const { CronJob } = require('cron');
 const config = require('../config');
 require('./marrainageScheduler');
 require('./emailCreationScheduler');
 require('./newsletterScheduler');
 require('./mattermostScheduler.js');
-const { CronJob } = require('cron');
 
 if (config.featureAddGithubUserToOrganization) {
   const { addGithubUserToOrganization } = require('./githubScheduler');
@@ -54,19 +54,22 @@ const { onUserContractEnding } = require('./userContractEndingScheduler');
 //   true,
 //   'Europe/Paris',
 // );
+if (config.featureOnUserContractEnd) {
+  const { sendContractEndingMessageToUsers } = require('./userContractEndingScheduler');
 
-const onUserContractEndIn2days = new CronJob(
-  '0 */8 * * * *',
-  () => onUserContractEnding('mail2days'),
-  null,
-  true,
-  'Europe/Paris',
-);
+  const onUserContractEndIn15days = new CronJob(
+    '0 */8 * * * *',
+    () => sendContractEndingMessageToUsers('mail15days'),
+    null,
+    true,
+    'Europe/Paris',
+  );
 
-// const onUserContractEndIn2days = new CronJob(
-//   '0 */8 * * * *',
-//   () => sendContractEndingMessageToUsers('mail2days'),
-//   null,
-//   true,
-//   'Europe/Paris',
-// );
+  const onUserContractEndIn2days = new CronJob(
+    '0 */8 * * * *',
+    () => sendContractEndingMessageToUsers('mail2days'),
+    null,
+    true,
+    'Europe/Paris',
+  );
+}
